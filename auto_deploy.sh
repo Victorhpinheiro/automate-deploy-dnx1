@@ -103,8 +103,8 @@ FILE="/etc/apache2/sites-available/laravel.conf"
 # https://stackoverflow.com/questions/2953081/how-can-i-write-a-heredoc-to-a-file-in-bash-script
 sudo cat > $FILE <<- EOM
 <VirtualHost *:80>
-    ServerAdmin admin@example.com
-    ServerName mydomain.com
+    ServerAdmin webmaster@localhost
+    ServerName localhost
     DocumentRoot /var/www/html/laravel/$REPO/public
 
     <Directory /var/www/html/laravel/$REPO>
@@ -142,7 +142,7 @@ sudo composer install --ignore-platform-reqs --no-plugins --no-scripts
 cd "/var/www/html/laravel/$REPO"
 
 
-# Could copy and use sed/sid commands but this way is simpler and more elegant
+# Could copy and use sed/sid commands but this way is simpler and more elegant if you know all the values
 sudo cat << EOM > /var/www/html/laravel/$REPO/.env
 APP_NAME=Laravel
 APP_ENV=production
@@ -174,7 +174,7 @@ echo "######################################################################"
 
 
 # application set up
-echo "Generating key"
+echo "Generating key, authentication and "
 sudo php artisan key:generate
 sudo php artisan jwt:generate
 sudo php artisan migrate
