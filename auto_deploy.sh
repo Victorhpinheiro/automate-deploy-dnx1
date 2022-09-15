@@ -2,10 +2,11 @@
 
 # Created by Victor Pinheiro 13/09/2022
 # Version 1.0 - It works but under supervisionteset1
-
+# inspired on this blog https://www.iankumu.com/blog/how-to-deploy-laravel-on-apache-server/
 # Automate install / challenge repo and configs for the DNX challenge
 
 # Assumes this file has executable permissions
+# Assumes it was executed with sudo
 # Assumes it have apt package manager installed and updated
 # Assumes it got run with sudo
 # It will install php7.4 and use the
@@ -23,16 +24,20 @@ GIT_REPO="https://github.com/DNXLabs/ChallengeDevOps"
 REPO="ChallengeDevOps"
 DB="ChallengeDevOps1"
 
+#Update apt repo
+echo "Update apt repo"
+sudo apt-get update
+echo "#########################################################"
 
-#Install curt -- no need config because all public REPO
+#Install curl to download composer with php from the machine
 echo "Installing curl"
 sudo apt-get install curl -y
-echo "I#########################################################"
+echo "#########################################################"
 
 #Install git -- no need config because all public REPO
 echo "Installing git"
 sudo apt-get install git -y
-echo "I#########################################################"
+echo "#########################################################"
 
 # Install apache
 echo "Installing Apache"
@@ -54,6 +59,7 @@ sudo apt-get install libapache2-mod-php7.4 php7.4 php7.4-common php7.4-xml php7.
 	php -v -y
 echo "#########################################################"
 
+
 # Install composer
 echo "Installing Composer"
 sudo curl -sS https://getcomposer.org/installer | php
@@ -63,7 +69,7 @@ echo "#########################################################"
 # Install mysql secure using root password
 # Prompt pwd for root mysql
 echo " "
-read -p "Please type once the password for root mysql:" PASS
+read -p "Please type the password for root mysql (type again when prompt):" PASS
  
 # sudo mysql_secure_installation
 # Use manual secure installation
@@ -71,7 +77,7 @@ read -p "Please type once the password for root mysql:" PASS
 echo "#########################################################"
 sudo mysql -e "CREATE DATABASE $DB;"
 echo "DATABASE $DB created"
-echo "Please use same password you created"
+echo "Please use same password you created above"
 sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '$PASS';"
 sudo mysql_secure_installation <<EOF
 y
@@ -88,9 +94,18 @@ echo "#########################################################"
 
 # Change config php.ini to 0 and remove ;
 echo "Changing PHP7.4"
+
 CONFIG_FILE="/etc/php/7.4/apache2/php.ini"
 TARGET_KEY="cgi.fix_pathinfo"
 REPLACEMENT_VALUE=0
+
+# https://stackoverflow.com/questions/59838/how-do-i-check-if-a-directory-exists-in-a-bash-shell-script
+if [! -f $CONFIG_FILE]
+then 
+    echo "Could not locate $CONFIG_FILE"
+    echo "Please verify if php 7.4 and apache lib for it were corrected installed"
+    exit 1
+fi
 
 sudo sed -i "/;$TARGET_KEY=/d" $CONFIG_FILE
 sudo echo "$TARGET_KEY=$REPLACEMENT_VALUE"  >> $CONFIG_FILE
@@ -118,8 +133,16 @@ sudo cat > $FILE <<- EOM
 </VirtualHost>
 EOM
 
-echo "$FILE created "
-echo "#########################################################"
+if [! -f $FILE]
+then 
+    echo "Could not create $FILE"
+    echo "Please verify permissions and Apache site-available folder"
+    exit 2
+else
+    echo "$FILE created "
+    echo "#########################################################"
+fi
+
 # Add config to apache
 echo "Config APACHE"
 sudo a2enmod rewrite
@@ -148,7 +171,7 @@ APP_NAME=Laravel
 APP_ENV=production
 APP_KEY=
 APP_DEBUG=false
-APP_LOG_LEVEL=debug
+APP_LOG_LEVEL=error
 APP_URL=http://localhost
 
 DB_CONNECTION=mysql
@@ -188,4 +211,6 @@ sudo chmod -R 775 /var/www/html/laravel/$REPO/bootstrap/cache
 
 #reload the Apache service
 sudo systemctl restart apache2
+sudo service apache2 status
 
+echo "Done, please check if it is correct served on port 80 of the public ip :)"
