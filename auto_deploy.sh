@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Created by Victor Pinheiro 13/09/2022
-# Version 1.0 - It works but under supervisionteset1
+# Version 1.0 - It works but under supervision
 # inspired on this blog https://www.iankumu.com/blog/how-to-deploy-laravel-on-apache-server/
 # Automate install / challenge repo and configs for the DNX challenge
 
