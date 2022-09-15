@@ -8,9 +8,6 @@
 # Assumes this file has executable permissions
 # Assumes it was executed with sudo
 # Assumes it have apt package manager installed and updated
-# Assumes it got run with sudo
-# It will install php7.4 and use the
-
 
 #TODOS:
 # Error handling
