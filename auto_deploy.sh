@@ -106,6 +106,8 @@ then
     echo "Please verify if php 7.4 and apache lib for it were corrected installed"
     exit 1
 fi
+sudo sed -i "/;cgi.fix_pathinfo=/d" "/etc/php/7.4/apache2/php.ini"
+sudo echo "cgi.fix_pathinfo=0"  >> "/etc/php/7.4/apache2/php.ini"
 
 sudo sed -i "/;$TARGET_KEY=/d" $CONFIG_FILE
 sudo echo "$TARGET_KEY=$REPLACEMENT_VALUE"  >> $CONFIG_FILE
@@ -202,7 +204,7 @@ sudo php artisan key:generate
 sudo php artisan jwt:generate
 sudo php artisan migrate
 
-#Changing permissions for apache to serve
+#Changing permissions for apache to serve with safety
 echo "Changing permissions for apache security"
 sudo chown -R :www-data /var/www/html/laravel/$REPO
 sudo chmod -R 775 /var/www/html/laravel/$REPO
