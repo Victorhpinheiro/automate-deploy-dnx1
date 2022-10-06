@@ -8,9 +8,10 @@ connections inbound to port 80 and apache should be working
 
 
 # How to use
-git clone inside a ubuntu machine (or copy the file in it)
-cd repo folder
-sudo chmod +x auto_deploy.sh
-sudo ./auto_deploy.sh
+
+- git clone inside a ubuntu machine (or copy the file in it)
+- cd repo folder
+- sudo chmod +x auto_deploy.sh
+- sudo ./auto_deploy.sh
 
 follow the prompt :)
