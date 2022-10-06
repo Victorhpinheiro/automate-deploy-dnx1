@@ -1,16 +1,13 @@
 #!/bin/bash
 
 # Created by Victor Pinheiro 13/09/2022
-# Version 1.0 - It works but under supervisionteset1
+# Version 1.0 - It works but under supervision
 # inspired on this blog https://www.iankumu.com/blog/how-to-deploy-laravel-on-apache-server/
 # Automate install / challenge repo and configs for the DNX challenge
 
 # Assumes this file has executable permissions
 # Assumes it was executed with sudo
 # Assumes it have apt package manager installed and updated
-# Assumes it got run with sudo
-# It will install php7.4 and use the
-
 
 #TODOS:
 # Error handling

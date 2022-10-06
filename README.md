@@ -1,4 +1,4 @@
-"# automate-deploy-dnx1" 
+# automate-deploy-dnx1
 
 Only tested in the ubuntu 22.04
 
